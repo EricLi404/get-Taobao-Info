@@ -80,4 +80,23 @@ function getPopById($id){
     $popularity=$arr['ICCP_1_'.$id];
     return $popularity;
 }
-?>
+
+/**   实现传入宝贝id，获取宝贝图片url
+ * @param $id    宝贝id
+ * @return mixd   宝贝图片url
+ */
+function getPicById($id){
+    $url="http://hws.m.taobao.com/cache/wdetail/5.0/?id=".$id;
+    $content=file_get_contents($url);
+    $content_ori=strip_tags($content);
+    $content_arr=json_decode($content_ori,true);
+    $detail=json_decode($content_arr['data']['apiStack']['0']['value'],true);
+    $success_sym=$detail['ret']['0'];//成功则返回"SUCCESS::调用成功";
+    if($success_sym=="SUCCESS::调用成功"){
+        $name=$content_arr['data']['itemInfoModel']['picsPath'];
+        return $name;
+    }else{
+        return "<script type='text/javascript'>alert('宝贝不存在!');</script>";
+    }
+
+}
